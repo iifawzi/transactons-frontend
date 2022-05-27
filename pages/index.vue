@@ -10,7 +10,16 @@
             <template v-slot:table__head>
               <th colspan="3">Account</th>
               <th colspan="2">Category</th>
-              <th>Date</th>
+              <th @click="dateClicked">
+                <p class="col-date">
+                  Date
+                  <i
+                    v-if="dateArrowDown"
+                    class="date-arrow fa-solid fa-caret-down"
+                  ></i>
+                  <i v-else class="date-arrow fa-solid fa-caret-up"></i>
+                </p>
+              </th>
               <th>Amount</th>
             </template>
             <template
@@ -45,9 +54,11 @@
             v-if="this.page >= 2"
             @click="updateData('before')"
           >
-            Before
+            <i class="fa-solid fa-circle-chevron-left"></i>
           </div>
-          <div class="next arrow" @click="updateData('next')">Next</div>
+          <div class="next arrow" @click="updateData('next')">
+            <i class="fa-solid fa-circle-chevron-right"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -72,6 +83,7 @@ export default {
       AllTransactions: [],
       loadedToPage: 1,
       page: 1,
+      dateArrowDown: true,
     };
   },
 
@@ -107,14 +119,23 @@ export default {
           this.page += 1;
           const startIndex = (neededPage - 1) * 20;
           const endIndex = neededPage * 20;
-          this.transactions = this.AllTransactions.slice(startIndex, endIndex);
+          const curr = this.AllTransactions.slice(startIndex, endIndex);
+          if (!this.dateArrowDown) {
+            this.transactions = curr.reverse();
+          } else {
+            this.transactions = curr;
+          }
         } else {
           const newTrans = await this.getData(this.page + 1);
           if (newTrans.length) {
-            this.transactions = newTrans;
             this.AllTransactions.push(...newTrans);
             this.page += 1;
             this.loadedToPage += 1;
+            if (!this.dateArrowDown) {
+              this.transactions = newTrans.reverse();
+            } else {
+              this.transactions = newTrans;
+            }
           }
         }
       } else {
@@ -124,9 +145,18 @@ export default {
           const startIndex = (neededPage - 1) * 20;
           const endIndex = neededPage * 20;
           const curr = this.AllTransactions.slice(startIndex, endIndex);
-          this.transactions = curr;
+          if (!this.dateArrowDown) {
+            this.transactions = curr.reverse();
+          } else {
+            this.transactions = curr;
+          }
         }
       }
+    },
+
+    dateClicked() {
+      this.dateArrowDown = !this.dateArrowDown;
+      this.transactions.reverse();
     },
   },
 };

@@ -23,7 +23,8 @@ export default {
   ** Global CSS
   */
   css: [
-    '~/assets/scss/main.scss'
+   '~/assets/css/all.css',
+   '~/assets/scss/main.scss'
   ],
   /*
   ** Global SCSS
