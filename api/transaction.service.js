@@ -12,7 +12,7 @@ const getAllTransactions = (page, account, to, from) => {
                 name,
                 color
             }
-            transactionDate
+            date
             reference
             description
             currency

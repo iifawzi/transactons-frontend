@@ -41,7 +41,7 @@
                   />
                 </td>
                 <td>
-                  {{ new Date(transaction.transactionDate).toDateString() }}
+                  {{ new Date(transaction.date).toDateString() }}
                 </td>
                 <td>{{ transaction.amount + " " + transaction.currency }}</td>
               </tr>
