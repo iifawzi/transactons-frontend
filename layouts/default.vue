@@ -6,7 +6,7 @@
 
 
 <style lang="scss" scoped>
-  .default-layout {
-    background-color: var(--gray-1);
-  }
+.default-layout {
+  background-color: var(--gray-1);
+}
 </style>

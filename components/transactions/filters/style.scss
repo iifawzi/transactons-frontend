@@ -1,0 +1,36 @@
+.filters {
+    height: 110px;
+    padding: 15px;
+
+    &-inputs {
+        display: flex;
+        flex-flow: row;
+        margin-top: 12px;
+
+        .input-label {
+            padding-left: 5px;
+            margin-bottom: 5px;
+        }
+
+        .input-container {
+            height: 90px;
+            width: 200px;
+            display: flex;
+            flex-flow: column;
+
+            &:not(:first-child) {
+                margin-left: 15px;
+            }
+
+            .input {
+                height: 40px;
+            }
+
+            .account-error {
+                margin-top: 3px;
+                padding-left: 6px;
+                color: red;
+            }
+        }
+    }
+}
