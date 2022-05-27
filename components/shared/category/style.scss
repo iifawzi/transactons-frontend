@@ -1,0 +1,11 @@
+.category {
+  height: 30px;
+  padding: 0px 20px;
+  padding-top: 3px;
+  border-radius: 5px;
+  display:inline-block;
+  &__value {
+      text-align: center;
+      padding-top: 4px;
+  }
+}
