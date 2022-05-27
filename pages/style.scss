@@ -5,9 +5,10 @@
     justify-content: center;
 
     .transactions {
+      width: 100%;
       border-radius: 10px;
       background-color: var(--white);
-      height: 800px;
+      height: 600px;
 
       .filters {
         height: 140px;
@@ -19,14 +20,30 @@
       }
 
       .table {
-        height: calc(800px - 240px);
-        min-width: 200px;
-        overflow-x: scroll;
+        height: calc(600px - 240px);
+        width: 100%;
         overflow-y: scroll;
+        overflow-x: scroll;
       }
 
       .tools {
         height: 100px;
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        .next {
+          margin-left: 30px;
+        }
+        .arrow {
+          &:hover {
+            cursor: pointer;
+          }
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="category" :style="'background-color:' + color">
+  <div class="category" :style="'background-color:#' + color">
     <p class="category__value">{{ value }}</p>
   </div>
 </template>
