@@ -2,6 +2,14 @@
 
 > Time is money, save both.
 
+<img width="1323" alt="image" src="https://user-images.githubusercontent.com/46695441/170806685-efd4d095-7ff7-4910-9586-da2e290a9b99.png">
+
+[![Everything Is AWESOME](https://yt-embed.herokuapp.com/embed?v=pHFL6FtxgMM)](https://www.youtube.com/watch?v=pHFL6FtxgMM "Transactions Frontend")
+
+## Technologies used: 
+
+`Javascript`, `Vue/Nuxt 2`, `SCSS`, `CSS`
+
 ## Build Setup
 
 ```bash
