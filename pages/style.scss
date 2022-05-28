@@ -89,3 +89,19 @@
     }
   }
 }
+
+
+@media (max-width: $small-devices) {
+  .transactions-page {
+    .transactions {
+      .table {
+        height: calc(800px - 460px);
+      }
+
+      .tools {
+        margin-top: 10px;
+        height: 50px;
+      }
+    }
+  }
+}
