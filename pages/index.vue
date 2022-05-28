@@ -14,7 +14,7 @@
         <div class="table" v-if="!loading && !error">
           <ModernTable>
             <template v-slot:table__head>
-              <th colspan="3">Account</th>
+              <th colspan="3">Reference</th>
               <th colspan="2">Category</th>
               <th @click="dateClicked">
                 <p class="col-date">
@@ -26,8 +26,10 @@
               <th>Amount</th>
             </template>
             <template class="transactions__data" v-slot:table__data>
-              <tr v-for="(transaction, i) of transactions" :key="i">
-                <td colspan="3">{{ transaction.account.name }}</td>
+              <tr v-for="(transaction, i) of transactions" :key="i" @click="showDetails(transaction)">
+                <td colspan="3">
+                  <p :class="[transaction.reference ? '' : 'no-ref']">{{ transaction.reference ? transaction.reference : 'no reference provided' }}</p>
+                </td>
                 <td colspan="2">
                   <Category v-if="transaction.category" :color="
                     transaction.category.color
@@ -231,6 +233,11 @@ export default {
       } else {
         this.toValid = false;
       }
+    },
+
+    showDetails(transaction) {
+      this.$store.dispatch("transactions/updateDetails", transaction);
+      this.$router.push({ name: 'details', params: { id: 1 } });
     }
 
   },
@@ -247,5 +254,8 @@ export default {
   }
 };
 </script>
+
+
+
 
 <style src="./style.scss" lang="scss" scoped  />
