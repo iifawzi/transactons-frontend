@@ -46,10 +46,10 @@
           </div>
         </div>
         <div class="tools" v-if="!loading && !error">
-          <div class="before arrow" v-if="this.page >= 2" @click="updateData('before')">
+          <div class="before arrow" v-if="this.page >= 2" @click="beforePage()">
             <i class="fa-solid fa-circle-chevron-left"></i>
           </div>
-          <div class="next arrow" @click="updateData('next')">
+          <div v-if="!stopNext" class="next arrow" @click="nextPage()">
             <i class="fa-solid fa-circle-chevron-right"></i>
           </div>
         </div>
@@ -70,7 +70,6 @@ export default {
     Category,
     Filters,
   },
-
   data() {
     return {
       loading: false,
@@ -79,10 +78,47 @@ export default {
       transactions: [],
       AllTransactions: [],
       loadedToPage: 1,
+      stopNext: false,
       page: 1,
-      error: ''
+      account: '',
+      from: '',
+      to: '',
+      error: '',
     };
   },
+
+  async created() {
+    this.debouncedFrom = this.debounce(async (from) => {
+      const curr = await this.getData(1, this.account, this.to, from);
+      if (!this.dateArrowDown) {
+        this.transactions = curr.reverse();
+      } else {
+        this.transactions = curr;
+      }
+      this.AllTransactions = curr;
+    }, 500);
+
+    this.debouncedTo = this.debounce(async (to) => {
+      const curr = await this.getData(1, this.account, to, this.from);
+      if (!this.dateArrowDown) {
+        this.transactions = curr.reverse();
+      } else {
+        this.transactions = curr;
+      }
+      this.AllTransactions = curr;
+    }, 500);
+
+    this.debouncedAccount = this.debounce(async (account) => {
+      const curr = await this.getData(this.page, account, this.to, this.from);
+      if (!this.dateArrowDown) {
+        this.transactions = curr.reverse();
+      } else {
+        this.transactions = curr;
+      }
+      this.AllTransactions = curr;
+    }, 500);
+  },
+
 
   async fetch() {
     const transactions = await this.getData();
@@ -92,20 +128,19 @@ export default {
 
   methods: {
     async getData(page, account, to, from) {
+      this.error = '';
       try {
         this.loading = true;
         const apolloClient = this.$apolloProvider.defaultClient;
-        const transactionsSettings = transactionServices.getAllTransactions(
-          page,
-          account,
-          to,
-          from
-        );
-        const response = await apolloClient.query({
-          query: transactionsSettings.query,
-          variables: transactionsSettings.variables,
-        });
+        const transactionsSettings = transactionServices.getAllTransactions(page, account, to, from);
+        const response = await apolloClient.query({ query: transactionsSettings.query, variables: transactionsSettings.variables });
         const { getAllTransactions } = response.data;
+        if (getAllTransactions.length < 20) {
+          this.stopNext = true;
+        } else {
+          this.stopNext = false;
+        }
+
         this.loading = false;
         return getAllTransactions;
       } catch (err) {
@@ -114,44 +149,45 @@ export default {
       }
     },
 
-    async updateData(type) {
-      if (type === "next") {
-        const neededPage = this.page + 1;
-        if (this.loadedToPage > neededPage) {
-          this.page += 1;
-          const startIndex = (neededPage - 1) * 20;
-          const endIndex = neededPage * 20;
-          const curr = this.AllTransactions.slice(startIndex, endIndex);
-          if (!this.dateArrowDown) {
-            this.transactions = curr.reverse();
-          } else {
-            this.transactions = curr;
-          }
+    async nextPage() {
+      const neededPage = this.page + 1;
+      if (this.loadedToPage >= neededPage) {
+        this.page += 1;
+        const startIndex = (neededPage - 1) * 20;
+        const endIndex = neededPage * 20;
+        const curr = this.AllTransactions.slice(startIndex, endIndex);
+        if (!this.dateArrowDown) {
+          this.transactions = curr.reverse();
         } else {
-          const newTrans = await this.getData(this.page + 1);
-          if (newTrans.length) {
-            this.AllTransactions.push(...newTrans);
-            this.page += 1;
-            this.loadedToPage += 1;
-            if (!this.dateArrowDown) {
-              this.transactions = newTrans.reverse();
-            } else {
-              this.transactions = newTrans;
-            }
-          }
+          this.transactions = curr;
         }
       } else {
-        if (this.page - 1 >= 1) {
-          this.page -= 1;
-          const neededPage = this.page;
-          const startIndex = (neededPage - 1) * 20;
-          const endIndex = neededPage * 20;
-          const curr = this.AllTransactions.slice(startIndex, endIndex);
+        const newTrans = await this.getData(this.page + 1, this.account, this.to, this.from);
+        if (newTrans.length) {
+          this.AllTransactions.push(...newTrans);
+          this.page += 1;
+          this.loadedToPage += 1;
           if (!this.dateArrowDown) {
-            this.transactions = curr.reverse();
+            this.transactions = newTrans.reverse();
           } else {
-            this.transactions = curr;
+            this.transactions = newTrans;
           }
+        }
+      }
+    },
+
+    async beforePage() {
+      if (this.page - 1 >= 1) {
+        this.stopNext = false;
+        this.page -= 1;
+        const neededPage = this.page;
+        const startIndex = (neededPage - 1) * 20;
+        const endIndex = neededPage * 20;
+        const curr = this.AllTransactions.slice(startIndex, endIndex);
+        if (!this.dateArrowDown) {
+          this.transactions = curr.reverse();
+        } else {
+          this.transactions = curr;
         }
       }
     },
@@ -162,20 +198,32 @@ export default {
     },
 
     accountChange(value) {
-      if (!value || typeof value !== 'string') {
-        console.log(!value, typeof value !== 'string')
-        this.accountValid = false;
-      } else {
-        this.accountValid = true;
-      }
+      this.loadedToPage = 1;
+      this.account = value;
     },
-    fromChange(value) {
-      console.log(value);
+
+    async fromChange(value) {
+      this.loadedToPage = 1;
+      this.from = value;
     },
-    toChange(value) {
-      console.log(value);
+
+    async toChange(value) {
+      this.loadedToPage = 1;
+      this.to = value;
     }
+
   },
+  watch: {
+    account(value) {
+      this.debouncedAccount(value);
+    },
+    from(value) {
+      this.debouncedFrom(value);
+    },
+    to(value) {
+      this.debouncedTo(value);
+    }
+  }
 };
 </script>
 

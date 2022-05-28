@@ -23,8 +23,8 @@ export default {
   ** Global CSS
   */
   css: [
-   '~/assets/css/all.css',
-   '~/assets/scss/main.scss'
+    '~/assets/css/all.css',
+    '~/assets/scss/main.scss'
   ],
   /*
   ** Global SCSS
@@ -36,6 +36,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    './plugins/debounce.js'
   ],
   /*
   ** Nuxt.js dev-modules

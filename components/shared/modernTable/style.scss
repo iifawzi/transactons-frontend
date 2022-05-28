@@ -2,42 +2,42 @@
     width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: fixed; 
     text-align: left;
     font-size: 1.4rem;
     border-radius: 10px;
     overflow-y: scroll;
     white-space: nowrap;
     overflow-x: scroll;
-
-    tr {
-        border-bottom: 1px solid var(--gray-2);
-    }
-
-    th {
-        color: var(--blue);
-        font-family: 'Courier New', Courier, monospace;
-    }
-
-    tr {
-        &:not(:last-child) {
+    thead {
+        tr {
             border-bottom: 1px solid var(--gray-2);
         }
-
-        &:hover {
-            background-color: var(--gray-7);
-            cursor: pointer;
+        
+        th {
+            color: var(--blue);
+            font-family: 'Courier New', Courier, monospace;
         }
     }
-
-    td {
-        color: var(--gray-5);
+    
+    tbody {
+        tr {
+            &:not(:last-child) {
+                border-bottom: 1px solid var(--gray-2);
+            }
+            &:hover {
+                background-color: var(--gray-7);
+                cursor: pointer;
+            }
+        }        
+        td {
+            color: var(--gray-5);
+        }
     }
 }
-
 @media (max-width: $medium-devices) {
     .modernTable {
-        min-width: 1000px;
+         min-width: 1000px;
     }
-
+    
 }
