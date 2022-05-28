@@ -102,6 +102,7 @@ export default {
         this.transactions = curr;
       }
       this.AllTransactions = curr;
+      this.page = 1;
     }, DEBOUNCE_TIMER);
 
     this.debouncedTo = this.debounce(async (to) => {
@@ -112,16 +113,18 @@ export default {
         this.transactions = curr;
       }
       this.AllTransactions = curr;
+      this.page = 1;
     }, DEBOUNCE_TIMER);
 
     this.debouncedAccount = this.debounce(async (account) => {
-      const curr = await this.getData(this.page, account, this.to, this.from);
+      const curr = await this.getData(1, account, this.to, this.from);
       if (!this.dateArrowDown) {
         this.transactions = curr.reverse();
       } else {
         this.transactions = curr;
       }
       this.AllTransactions = curr;
+      this.page = 1;
     }, DEBOUNCE_TIMER);
   },
 
