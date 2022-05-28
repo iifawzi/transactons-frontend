@@ -4,8 +4,11 @@
       <div class="transactions">
         <p class="title">Transactions</p>
         <Filters @accountChange="accountChange" @toChange="toChange" @fromChange="fromChange">
-          <template v-if="!accountValid" v-slot:account_error>
-            Account must be a string
+          <template v-if="!fromValid" v-slot:from_error>
+            from Date is not valid
+          </template>
+          <template v-if="!toValid" v-slot:to_error>
+            to Date is not valid
           </template>
         </Filters>
         <div class="table" v-if="!loading && !error">
@@ -60,9 +63,11 @@
 
 <script>
 import transactionServices from "~/api/transaction.service.js";
+import dateIsValid from "~/helpers/dateIsValid.js"
 import ModernTable from "~/components/shared/modernTable";
 import Category from "~/components/shared/category";
-import Filters from "../components/transactions/filters/index.vue"
+import Filters from "~/components/transactions/filters/index.vue"
+import { DEBOUNCE_TIMER } from "~/constants"
 export default {
   layout: "default",
   components: {
@@ -73,7 +78,8 @@ export default {
   data() {
     return {
       loading: false,
-      accountValid: true,
+      fromValid: true,
+      toValid: true,
       dateArrowDown: true,
       transactions: [],
       AllTransactions: [],
@@ -96,7 +102,7 @@ export default {
         this.transactions = curr;
       }
       this.AllTransactions = curr;
-    }, 500);
+    }, DEBOUNCE_TIMER);
 
     this.debouncedTo = this.debounce(async (to) => {
       const curr = await this.getData(1, this.account, to, this.from);
@@ -106,7 +112,7 @@ export default {
         this.transactions = curr;
       }
       this.AllTransactions = curr;
-    }, 500);
+    }, DEBOUNCE_TIMER);
 
     this.debouncedAccount = this.debounce(async (account) => {
       const curr = await this.getData(this.page, account, this.to, this.from);
@@ -116,7 +122,7 @@ export default {
         this.transactions = curr;
       }
       this.AllTransactions = curr;
-    }, 500);
+    }, DEBOUNCE_TIMER);
   },
 
 
@@ -203,13 +209,25 @@ export default {
     },
 
     async fromChange(value) {
-      this.loadedToPage = 1;
-      this.from = value;
+      const isValid = dateIsValid(value);
+      if (isValid) {
+        this.fromValid = true;
+        this.loadedToPage = 1;
+        this.from = value;
+      } else {
+        this.fromValid = false;
+      }
     },
 
     async toChange(value) {
-      this.loadedToPage = 1;
-      this.to = value;
+      const isValid = dateIsValid(value);
+      if (isValid) {
+        this.toValid = true;
+        this.loadedToPage = 1;
+        this.to = value;
+      } else {
+        this.toValid = false;
+      }
     }
 
   },

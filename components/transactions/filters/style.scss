@@ -1,5 +1,5 @@
 .filters {
-    height: 110px;
+    height: $filters-height;
     padding: 15px;
 
     &-inputs {
@@ -26,7 +26,7 @@
                 height: 40px;
             }
 
-            .account-error {
+            .input-error {
                 margin-top: 3px;
                 padding-left: 6px;
                 color: red;
@@ -37,27 +37,24 @@
 
 @media (max-width: $small-devices) {
     .filters {
-        height: 300px;
+        height: $small-filters-height;
+        font-size: 1.4rem;
     
         &-inputs {
             flex-flow: column;
             align-items: center;
-            margin-top: 12px;
+            margin-top: 0px;
 
             .input-container { 
+                height: 70px;
+                width: 200px;
                 &:not(:first-child) {
                     margin-left: 0px
                 }
-    
                 .input {
-                    height: 40px;
+                    height: 30px;
                 }
     
-                .account-error {
-                    margin-top: 3px;
-                    padding-left: 6px;
-                    color: red;
-                }
             }
         }
     }

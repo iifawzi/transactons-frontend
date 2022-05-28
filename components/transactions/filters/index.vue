@@ -5,17 +5,23 @@
                 <label for="account" class="input-label">Account</label>
                 <inputField class="input" type="text" placeholder="Account Name" id="account"
                     @input="$emit('accountChange', $event)" />
-                <div class="account-error">
+                <div class="input-error">
                     <slot name="account_error"></slot>
                 </div>
             </div>
             <div class="input-container">
                 <label for="from" class="input-label">From</label>
                 <inputField class="input" type="date" id="from" @input="$emit('fromChange', $event)" />
+                <div class="input-error">
+                    <slot name="from_error"></slot>
+                </div>
             </div>
             <div class="input-container">
                 <label for="to" class="input-label">To</label>
                 <inputField class="input" type="date" id="to" @input="$emit('toChange', $event)" />
+                <div class="input-error">
+                    <slot name="to_error"></slot>
+                </div>
             </div>
 
         </div>
@@ -29,10 +35,6 @@ export default {
     }
 }
 </script>
-
-
-
-
 
 <style src="./style.scss" lang="scss" scoped />
 

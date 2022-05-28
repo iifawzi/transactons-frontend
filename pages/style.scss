@@ -8,7 +8,7 @@
     width: 100%;
     border-radius: 10px;
     background-color: var(--white);
-    height: 800px;
+    height: 600px;
 
     .title {
       padding: 15px;
@@ -17,7 +17,7 @@
     }
 
     .table {
-      height: calc(800px - 260px);
+      height: calc(600px - 260px);
       width: 100%;
       overflow-y: scroll;
       overflow-x: scroll;
@@ -94,8 +94,9 @@
 @media (max-width: $small-devices) {
   .transactions-page {
     .transactions {
+      height: 700px;
       .table {
-        height: calc(800px - 460px);
+        height: calc(650px - (100px + $small-filters-height));
       }
 
       .tools {
